@@ -34,3 +34,9 @@ This repo includes hands-on examples, code samples, and practical projects that 
 - **Maintainability**: Standardized code structure and patterns make it easier to maintain, debug, and collaborate on agent projects across teams.
 
 - **Enterprise Features**: Frameworks provide production-ready features like authentication, authorization, audit logging, and compliance support.
+
+### What is the Google ADK?
+
+Google Agent Development Kit (ADK) is a comprehensive framework designed to simplify the creation, deployment, and management of AI agents at scale. It provides a unified platform with pre-built components, APIs, and tools that enable developers to build intelligent, autonomous agents that can understand context, make decisions, and interact seamlessly with external systems and services.
+
+![Google ADK](images/gadk.png)

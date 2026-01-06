@@ -40,3 +40,23 @@ This repo includes hands-on examples, code samples, and practical projects that 
 Google Agent Development Kit (ADK) is a comprehensive framework designed to simplify the creation, deployment, and management of AI agents at scale. It provides a unified platform with pre-built components, APIs, and tools that enable developers to build intelligent, autonomous agents that can understand context, make decisions, and interact seamlessly with external systems and services.
 
 ![Google ADK](images/gadk.png)
+
+### Multi-Agent Systems
+
+Multi-agent systems involve coordinating multiple AI agents to work together toward common goals, enabling complex problem-solving that goes beyond what a single agent can achieve. In a multi-agent system, agents communicate, collaborate, and coordinate their actions to handle sophisticated tasks, distribute workloads, and provide specialized expertise across different domains.
+
+Google ADK provides robust support for building and managing multi-agent systems through several key capabilities:
+
+- **Agent Orchestration**: Built-in tools for coordinating multiple agents, managing their interactions, and ensuring they work in harmony toward shared objectives.
+
+- **Inter-Agent Communication**: Standardized messaging protocols that allow agents to communicate efficiently, share information, and coordinate their actions seamlessly.
+
+- **Centralized Coordination**: A coordination layer that enables agents to synchronize workflows, handle dependencies, and manage complex multi-step processes across the system.
+
+- **Scalable Architecture**: Support for deploying and scaling multiple agents across distributed infrastructure, allowing your multi-agent system to grow as needed.
+
+- **State Management**: Tools for managing shared state and context across agents, ensuring consistency and coherence in multi-agent operations.
+
+- **Monitoring & Analytics**: Comprehensive visibility into multi-agent interactions, performance metrics, and system health across all agents.
+
+![Multi-Agent Systems](images/multi-agent.png)

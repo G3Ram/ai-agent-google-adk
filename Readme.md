@@ -60,3 +60,15 @@ Google ADK provides robust support for building and managing multi-agent systems
 - **Monitoring & Analytics**: Comprehensive visibility into multi-agent interactions, performance metrics, and system health across all agents.
 
 ![Multi-Agent Systems](images/multi-agent.png)
+
+### Google ADK Tool Ecosystem
+
+Google ADK provides a rich and extensible tool ecosystem that enables agents to perform a wide variety of tasks and integrate with external systems. This flexible approach allows you to build powerful agents tailored to your specific needs:
+
+- **Custom Python Functions**: Define and integrate custom Python functions directly into your agents, allowing you to encapsulate business logic, perform computations, or implement domain-specific operations seamlessly.
+
+- **Built-in Tools**: Leverage a comprehensive library of pre-built tools provided by Google ADK, including utilities for data processing, text manipulation, mathematical operations, and common integration patterns.
+
+- **Agents as Tools**: Compose agents hierarchically by using agents as tools for other agents, enabling modular design and creating specialized sub-agents that handle specific tasks or domains.
+
+- **Third-Party Integrations**: Connect seamlessly with external services and APIs through pre-built integrations with popular platforms, databases, and cloud services, extending your agent's capabilities beyond the framework.

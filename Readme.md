@@ -72,3 +72,13 @@ Google ADK provides a rich and extensible tool ecosystem that enables agents to 
 - **Agents as Tools**: Compose agents hierarchically by using agents as tools for other agents, enabling modular design and creating specialized sub-agents that handle specific tasks or domains.
 
 - **Third-Party Integrations**: Connect seamlessly with external services and APIs through pre-built integrations with popular platforms, databases, and cloud services, extending your agent's capabilities beyond the framework.
+
+### Deterministic Orchestration: Workflow Agents
+
+Google ADK provides deterministic orchestration capabilities through specialized workflow agents that enable predictable, structured execution of complex tasks. These agents ensure that tasks execute in a controlled manner with clear dependencies and execution patterns:
+
+- **Sequential Agent**: Executes tasks in a strict linear order, where each task completes before the next one begins. This is ideal for workflows where steps have dependencies and must run one after another, such as data validation followed by processing followed by storage.
+
+- **Parallel Agent**: Executes multiple tasks simultaneously to improve efficiency and reduce overall execution time. This agent is perfect for independent tasks that don't depend on each other, allowing your workflow to take advantage of concurrent processing and handle multiple operations at once.
+
+- **Loop Agent**: Repeatedly executes tasks based on specified conditions or iterations, enabling the processing of collections, retries, or recurring workflows. This agent handles batch operations, iterative refinement, and any scenario where tasks need to be repeated until a condition is met.

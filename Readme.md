@@ -82,3 +82,17 @@ Google ADK provides deterministic orchestration capabilities through specialized
 - **Parallel Agent**: Executes multiple tasks simultaneously to improve efficiency and reduce overall execution time. This agent is perfect for independent tasks that don't depend on each other, allowing your workflow to take advantage of concurrent processing and handle multiple operations at once.
 
 - **Loop Agent**: Repeatedly executes tasks based on specified conditions or iterations, enabling the processing of collections, retries, or recurring workflows. This agent handles batch operations, iterative refinement, and any scenario where tasks need to be repeated until a condition is met.
+
+### Agent Lifecycle
+
+The agent lifecycle encompasses the complete journey of an AI agent from conception to production operation. Google ADK supports a well-defined lifecycle with four key phases that guide you through developing and managing robust agents:
+
+- **Build**: Design and implement your agent with the necessary tools, logic, and capabilities. This phase involves defining the agent's behavior, integrating tools and APIs, configuring parameters, and setting up the foundation for intelligent decision-making. You'll write code, test components, and establish the core architecture of your agent.
+
+- **Interact**: Deploy the agent in a controlled environment to test its interactions and behavior with real-world scenarios. This phase allows you to understand how the agent responds to various inputs, how it communicates, and how it handles edge cases. Collect feedback and user interactions to validate that the agent behaves as expected.
+
+- **Evaluate**: Assess the agent's performance against predefined metrics and success criteria. This phase involves analyzing the agent's decision quality, accuracy, response times, and user satisfaction. Use monitoring tools and analytics to identify bottlenecks, failures, and areas for improvement before full production deployment.
+
+- **Deploy**: Release the agent to production where it serves real users and handles actual workloads. This phase includes setting up monitoring, logging, and alerting to ensure the agent continues to perform well. Implement safeguards, compliance checks, and rollback procedures to maintain reliability and safety in a live environment.
+
+![Agent Lifecycle](images/agent-lifecycle.png)

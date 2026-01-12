@@ -54,3 +54,93 @@ When you're done working in the environment, you can deactivate it using:
 ```bash
 conda deactivate
 ```
+
+## Setting up the Google API Key
+
+To use Google ADK and access Google's AI services, you'll need to set up your `GOOGLE_API_KEY` environment variable.
+
+### Step 1: Get Your Google API Key
+
+1. Go to [Google Cloud Console](https://console.cloud.google.com/)
+2. Create a new project or select an existing one
+3. Enable the required APIs (Generative AI API, etc.)
+4. Go to **Credentials** → **Create Credentials** → **API Key**
+5. Copy the generated API key
+
+### Step 2: Set the Environment Variable
+
+You have several options to set your `GOOGLE_API_KEY`:
+
+**Option A: Export in Terminal (Temporary)**
+
+For the current terminal session only, run:
+
+```bash
+export GOOGLE_API_KEY="your-api-key-here"
+```
+
+Replace `your-api-key-here` with your actual API key.
+
+**Option B: Add to Shell Profile (Persistent)**
+
+For macOS/Linux, add the following line to your shell profile (`~/.zshrc`, `~/.bash_profile`, or `~/.bashrc`):
+
+```bash
+export GOOGLE_API_KEY="your-api-key-here"
+```
+
+Then reload the profile:
+
+```bash
+source ~/.zshrc  # or source ~/.bash_profile
+```
+
+**Option C: Create a `.env` File (Recommended for Development)**
+
+1. Create a `.env` file in the project root directory:
+
+```bash
+touch .env
+```
+
+2. Add your API key to the `.env` file:
+
+```
+GOOGLE_API_KEY=your-api-key-here
+```
+
+3. Install `python-dotenv` if not already installed:
+
+```bash
+pip install python-dotenv
+```
+
+4. Load the environment variables in your Python code:
+
+```python
+from dotenv import load_dotenv
+import os
+
+load_dotenv()
+api_key = os.getenv("GOOGLE_API_KEY")
+```
+
+### Step 3: Verify the Setup
+
+To verify that your `GOOGLE_API_KEY` is set correctly, run:
+
+```bash
+echo $GOOGLE_API_KEY
+```
+
+You should see your API key printed in the terminal. If you see nothing, the environment variable is not set.
+
+### Security Note
+
+⚠️ **Important**: Never commit your API key to version control. Add `.env` to your `.gitignore` file:
+
+```bash
+echo ".env" >> .gitignore
+```
+
+This ensures your sensitive credentials remain private.

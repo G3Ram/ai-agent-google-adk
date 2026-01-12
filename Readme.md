@@ -96,3 +96,17 @@ The agent lifecycle encompasses the complete journey of an AI agent from concept
 - **Deploy**: Release the agent to production where it serves real users and handles actual workloads. This phase includes setting up monitoring, logging, and alerting to ensure the agent continues to perform well. Implement safeguards, compliance checks, and rollback procedures to maintain reliability and safety in a live environment.
 
 ![Agent Lifecycle](images/agent-lifecycle.png)
+
+### Model Agnostic & Deployment Agnostic
+
+Google ADK is designed with flexibility in mind, allowing you to build agents that are independent of specific AI models and deployment infrastructure. This approach provides significant benefits for long-term sustainability and adaptability:
+
+**Model Agnostic**:
+- **Flexibility with LLMs**: Work with any large language model—whether it's Google's Gemini, OpenAI's GPT, Anthropic's Claude, or open-source models. Your agent code remains consistent regardless of which model you choose.
+- **Easy Model Switching**: Replace or upgrade your underlying model without rewriting agent logic, allowing you to take advantage of newer, more capable models as they become available.
+- **Multi-Model Support**: Combine multiple models in a single agent, using specialized models for different tasks based on their strengths and capabilities.
+
+**Deployment Agnostic**:
+- **Cloud Flexibility**: Deploy your agents on Google Cloud, AWS, Azure, or on-premises infrastructure without changing your code. The framework abstracts away deployment complexities.
+- **Multiple Runtime Options**: Run agents in serverless environments, containerized services, VMs, or edge devices—choose the deployment model that best fits your requirements.
+- **Infrastructure Independence**: Your agent code remains decoupled from underlying infrastructure, enabling seamless migration between deployment environments as your needs evolve.

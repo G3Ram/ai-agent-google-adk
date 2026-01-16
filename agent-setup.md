@@ -93,7 +93,93 @@ Once your agent is created:
 3. **Test locally**: Run your agent locally before deployment
 4. **Deploy**: Follow deployment guidelines to push your agent to production
 
-## Troubleshooting
+## Running and Testing Your Agent
+
+### Using the Web Interface
+
+The easiest way to test and interact with your agent is through the web UI:
+
+```bash
+adk web
+```
+
+This command:
+- Launches a web-based interface for your agents
+- Provides a browser-based IDE and testing environment
+- Allows you to interact with and debug your agents in real-time
+- Defaults to `http://localhost:5000` (check terminal output for exact URL)
+
+**Features of the Web Interface:**
+- Write and modify agent code directly
+- Test agents with sample inputs
+- View execution logs and debugging information
+- Monitor agent performance and responses
+- Deploy agents directly from the UI
+
+### Running a Specific Agent
+
+To run your agent from the command line:
+
+```bash
+adk run my_first_agent
+```
+
+This command:
+- Executes the specified agent (`my_first_agent`)
+- Starts an interactive session where you can provide inputs
+- Displays the agent's responses and outputs
+- Shows any errors or execution details
+
+**Example Session:**
+
+```bash
+$ adk run my_first_agent
+Agent: my_first_agent started
+Type your message (or 'quit' to exit):
+> Hello, what's your name?
+Agent response: I'm your AI agent powered by Google ADK...
+> quit
+Agent: my_first_agent stopped
+```
+
+### Common Commands
+
+Here are other useful ADK commands:
+
+**List all agents:**
+```bash
+adk list
+```
+
+**Get agent details:**
+```bash
+adk info my_first_agent
+```
+
+**View agent logs:**
+```bash
+adk logs my_first_agent
+```
+
+**Stop an agent:**
+```bash
+adk stop my_first_agent
+```
+
+**Deploy an agent:**
+```bash
+adk deploy my_first_agent
+```
+
+## Workflow for Testing and Development
+
+1. **Create Agent**: Use `adk create my_first_agent` to scaffold a new agent
+2. **Web Development**: Run `adk web` for an interactive development environment
+3. **Local Testing**: Use `adk run my_first_agent` to test via command line
+4. **Debugging**: Check logs and responses to refine agent behavior
+5. **Deployment**: Once satisfied, use `adk deploy` to push to production
+
+
 
 **Error: "Don't have API Key?"**
 - Make sure your `GOOGLE_API_KEY` environment variable is set correctly

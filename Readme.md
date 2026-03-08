@@ -110,3 +110,19 @@ Google ADK is designed with flexibility in mind, allowing you to build agents th
 - **Cloud Flexibility**: Deploy your agents on Google Cloud, AWS, Azure, or on-premises infrastructure without changing your code. The framework abstracts away deployment complexities.
 - **Multiple Runtime Options**: Run agents in serverless environments, containerized services, VMs, or edge devices—choose the deployment model that best fits your requirements.
 - **Infrastructure Independence**: Your agent code remains decoupled from underlying infrastructure, enabling seamless migration between deployment environments as your needs evolve.
+
+### ADK Runtime
+
+**Role and the Event Loop**
+
+The Runner's primary role is to manage the event loop, which is the fundamental pattern governing how ADK executes an agent's code. This is a cooperative, back-and-forth communication cycle:
+
+1. The Runner receives a user's query.
+2. It kicks off the agent's logic.
+3. The agent's logic runs until it needs to communicate something—like a final answer, a request to call a tool, or a change in state. At this point, the agent's code pauses and yields an Event object back to the Runner.
+4. The Runner receives this Event, processes it (e.g., executes a requested tool or commits a state change), and forwards the result upstream.
+5. Only after the Runner has finished processing the event, it signals the agent's logic to resume from exactly where it left off, now aware of the outcome of the event.
+
+This cooperative **yield → pause → process → resume** cycle is the heartbeat of the ADK runtime. It ensures that actions like tool calls and state updates are handled consistently and that the agent is always working with the most up-to-date information.
+
+![ADK Runtime](images/ADK runtime.png)

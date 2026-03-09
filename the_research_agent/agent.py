@@ -1,6 +1,6 @@
 import wikipedia
 import arxiv
-from google.adk.agents.llm_agent import Agent
+from google.adk.agents import LlmAgent
 from google.adk.tools.google_search_tool import GoogleSearchTool
 
 def wikipedia_tool(query: str) -> str:
@@ -74,10 +74,25 @@ def report_writer_tool(content: str, filename: str) -> str:
     except Exception as e:
         return f"An error occurred while writing to the file: {str(e)}"
 
-        
-root_agent = Agent(
+instruction = """
+You are a helpful and diligent research assistant. Your goal is to produce a brief research report on a given topic.
+
+You MUST follow these steps in order:
+1. First, gather background information on the topic using the wikipedia_tool.
+2. Next, find relevant academic papers using the arxiv_tool.
+3. Then, find supplementary web articles using the google_search tool.
+4. Finally, synthesize all the information you have gathered from all sources into a coherent report
+    and use the report_writer_tool to save this complete report to a file named 'report.txt'.
+"""
+root_agent = LlmAgent(
     model='gemini-2.5-flash',
-    name='root_agent',
-    description='A helpful assistant for user questions.',
-    instruction='Answer user questions to the best of your knowledge',
+    name='research_assistant',
+    description='A research assistant that gathers information from Wikipedia, arXiv and Google Search to create a summary report on a given topic.',
+    instruction=instruction,
+    tools=[
+        wikipedia_tool,
+        arxiv_tool,
+        GoogleSearchTool(bypass_multi_tools_limit=True),
+        report_writer_tool
+    ]
 )

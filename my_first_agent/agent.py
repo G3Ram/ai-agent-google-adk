@@ -1,56 +1,84 @@
-from google.adk.agents.llm_agent import Agent
-from google.adk.planners import BuiltInPlanner, PlanReActPlanner
-from google.genai import types
-from pydantic import BaseModel, Field
+import asyncio
+import os
 
-# def greeting_tool()-> str:
-#     """Returns a warm friendly welcome message"""
-#     return "Hello from your specialized greeting tool! Welcome."
+from google.adk.agents.llm_agent import LlmAgent
+from google.adk.runners import InMemoryRunner
+from google.genai import types as genai_types
 
-# class GreetingRequest(BaseModel):
-#     """Input schema for specifying the language of the greeting."""
-#     language: str = Field(description="The language to greet the user in.")
-
-# class GreetingResponse(BaseModel):
-#     """Output schema for the greeting message."""
-#     greeting_message: str = Field(description="The final, formatted greeting message.")
-
-def create_greeting(name: str, language: str = "English") -> str:
-    """Creates a personalized greeting for a user in a specified language.
-
-    Args:
-        name (str): The name of the person to greet.
-        language (str): The language for the greeting. Defaults to English.
-    """
-    if language.lower() == "spanish":
-        return f"Hola, {name}! Cómo estás?"
-    else:
-        return f"Hello, {name}! How are you?"
-    
-
-root_agent = Agent(
-    model='gemini-2.5-flash',
-    name='root_agent',
-    description='A helpful assistant for user questions.',
-    instruction='You are a friendly agent. When the user asks for a greeting, use the 'create_greeting' tool to generate it.',
-    tools=[create_greeting, google_search],
-    # generate_content_config=types.GenerateContentConfig(
-    #     temperature=0.2,
-    #     max_output_tokens=250,
-    #     input_schema=GreetingRequest,
-    #     output_schema=GreetingResponse,
-    #     output_key="final_greeting",
-    #     include_contents = 'none', # It will be a fresh conversation. History will not be included in the input.
-    #     planner=BuiltInPlanner(
-    #         thinking_config=types.ThinkingConfig(
-    #             include_thoughts=True,
-    #             thinking_budget=1024
-    #         )
-    #     ),
-    #     safety_settings=[types.SafetySetting(
-    #         category=types.HarmCategory.HARM_CATEGORY_HATE_SPEECH,
-    #         threshold=types.HarmBlockThreshold.BLOCK_LOW_AND_ABOVE,
-    #     )]
-    # )
+# Defining a very simple chat agent
+root_agent = chat_agent = LlmAgent(
+    model="gemini-2.5-flash",
+    name="chat_agent",
+    description="A friendly assistant for conversations.",
+    instruction=(
+        "You are a helpful chat assistant."
+        "Answer the user's questions clearly without any ambiguity."
+    )
 )
 
+async def main() -> None:
+    if not os.getenv("GOOGLE_API_KEY"):
+        raise RuntimeError("Please set the GOOGLE_API_KEY environment variable.")
+
+    # create an in-memory runner for this agent
+    runner = InMemoryRunner(
+        agent=chat_agent,
+        app_name="chat_app",
+    )
+
+    # create a session (kept in memory only for this run)
+    session = await runner.session_service.create_session(
+        app_name=runner.app_name,
+        user_id="local-user"
+    )
+
+    print("ADK Chat Agent is ready.")
+    print("Type your message, or 'exit' / 'quit' to stop. \n")
+
+    # simple chat loop
+    while True:
+        try:
+            user_text = input("You: ").strip()
+        except (EOFError, KeyboardInterrupt):
+            print("\nExiting chat.")
+            break
+
+        if user_text.lower() in {"exit", "quit"}:
+            print("Goodbye!")
+            break
+
+        if not user_text:
+            continue
+
+    # build the user message as a content object
+    new_message = genai_types.Content(
+        role="user",
+        parts=[genai_types.Part(text=user_text)]
+    )
+
+    # collect the model's textual reply
+    reply_chunks: list[str] = []
+
+    # run the agent through the runner for this turn
+    async for event in runner.run_async(
+        user_id=session.user_id,
+        session_id=session.id,
+        new_message=new_message
+    ):
+        if event.content and event.content.parts:
+            for part in event.content.parts:
+                text = getattr(part, "text", None)
+                if text:
+                    reply_chunks.append(text)
+
+    # print the last assembled reply (if any)
+    if reply_chunks:
+        # join all text parts for this turn
+        reply_text = "".join(reply_chunks)
+        print(f"Agent: {reply_text} \n")
+    else:
+        print("Agent: (no response content received) \n")
+
+
+if __name__ == "__main__":
+    asyncio.run(main())

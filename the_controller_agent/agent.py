@@ -1,6 +1,7 @@
 import wikipedia
 import arxiv
 from google.adk.agents import LlmAgent
+from google.adk.tools.google_search_tool import GoogleSearchTool
 
 
 #-----------------------     Wikipedia Agent     -----------------------
@@ -72,4 +73,14 @@ arxiv_agent = LlmAgent(
     description='An expert at finding and summarizing academic papers from arXiv.',
     instruction='You are a specialized agent and your only task is to accept a research query and use the arxiv_tool to find relevant academic papers.',
     tools=[arxiv_tool]
+)
+
+#-----------------------     Web Agent     -----------------------
+
+web_agent = LlmAgent(
+    model='gemini-2.5-flash',
+    name='web_researcher',
+    description='An expert at finding and summarizing information from the web.',
+    instruction='You are a specialized agent and your only task is to accept a research query and use the google_search_tool to find relevant information from the web.',
+    tools=[GoogleSearchTool()]
 )

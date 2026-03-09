@@ -174,3 +174,42 @@ The monolithic pattern is ideal when:
 #### Limitations
 
 As tasks grow in complexity, a single agent managing everything can become harder to maintain, debug, and scale. Each tool call adds to the context window, and the agent may struggle with very long workflows. These are the motivations for the more advanced patterns we'll explore next.
+
+### Pattern 2: Controller Pattern (Multi-Agent)
+
+![Single vs Multi-Agent](images/single_vs_multi_agent.png)
+
+To move beyond the monolithic approach, we adopt a common and powerful multi-agent architecture known as the **controller pattern**. In this design, responsibilities are split between two types of agents:
+
+- **Controller agent** (also known as an orchestrator or manager) — the primary point of contact for the user. Its job is not to perform tasks itself, but to understand the user's request and delegate it to the appropriate specialist.
+- **Worker agents** — each is an expert in a single, specific task (e.g., searching Wikipedia, querying arXiv, writing a report).
+
+#### The Agent-as-a-Tool Pattern
+
+The key mechanism that makes this work is the **Agent-as-a-Tool** pattern. Each worker agent is wrapped in an `AgentTool` class, which makes the entire agent — with its own model, instructions, and tools — behave like a single callable tool that the controller can invoke.
+
+This means the controller's instruction prompt is no longer a multi-step research plan. Instead, it becomes a routing directive: understand the request, identify the right specialist, and delegate.
+
+#### Architecture
+
+| Component | Role |
+|---|---|
+| `controller_agent` | Receives user query, decides which worker to call |
+| `wikipedia_agent` | Wraps `wikipedia_tool`, handles encyclopedic lookups |
+| `arxiv_agent` | Wraps `arxiv_tool`, handles academic paper searches |
+| `report_writer_agent` | Wraps `report_writer_tool`, compiles the final report |
+
+#### How It Works
+
+1. The user submits a research query to the controller agent.
+2. The controller reasons about the query and delegates to the appropriate worker agent via `AgentTool`.
+3. The worker agent executes its task using its own tools and returns a result.
+4. The controller may delegate to additional workers as needed.
+5. Once all information is gathered, the controller delegates to the `report_writer_agent` to produce the final output.
+
+#### Advantages Over the Monolithic Pattern
+
+- **Separation of concerns** — each agent has a focused, well-defined responsibility
+- **Easier to debug** — failures are isolated to a specific worker agent
+- **Scalable** — new capabilities can be added by introducing new worker agents without modifying existing ones
+- **Context efficiency** — each worker operates in its own context window, reducing the risk of context overload in complex workflows

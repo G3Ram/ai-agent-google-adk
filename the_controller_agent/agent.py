@@ -1,8 +1,11 @@
+import logging
 import wikipedia
 import arxiv
 from google.adk.agents import LlmAgent
 from google.adk.tools.agent_tool import AgentTool
 from google.adk.tools.google_search_tool import GoogleSearchTool
+
+logger = logging.getLogger(__name__)
 
 
 #-----------------------     Wikipedia Agent     -----------------------
@@ -89,15 +92,14 @@ web_agent = LlmAgent(
 #-----------------------     Report Writer Agent     -----------------------
 def report_writer_tool(content: str, filename: str) -> str:
     """
-    Writes the given content to a local file. Appends if the file already exists. 
+    Writes the given content to a local file. Appends if the file already exists.
 
     Args:
         content (str): The text content to write to the file.
-        filename (str): The name of the file to save the content in (e.g., 'report.txt').
+        filename (str): The name of the file to save the content in (e.g., 'black_holes_report.txt'). Must not be 'report.txt'.
     """
     try:
-        # use 'a' for append mode. This will create the file if it does not exist,
-        # or add to the end of it if it does exist.
+        logger.warning("report_writer_tool called with filename: %s", filename)
         with open(filename, 'a', encoding='utf-8') as f:
             f.write(content + "\n")
         return f"Successfully appended content to {filename}."
@@ -108,7 +110,7 @@ report_writer_agent = LlmAgent(
     model='gemini-2.5-flash',
     name='report_writer',
     description='An expert at writing contents to a local file.',
-    instruction='You are a specialized agent and your only task is to accept content and use the report_writer_tool to save this content to a specified file.',
+    instruction='You are a specialized agent. Your task is to accept content and a filename, then call report_writer_tool with both. The filename will be explicitly provided in the request (e.g., "black_holes_report.txt"). You MUST use that exact filename — never default to "report.txt".',
     tools=[report_writer_tool]
 )
 
@@ -125,7 +127,7 @@ Your specializt team consists of:
 Your workflow MUST be as follows:
 1. First, call all three specialist research agents('wikipedia_researcher', 'arxiv_researcher', 'web_researcher') with the same research query to gather information on the topic from their respective sources.
 2. Once all information has been gatehered, you must pesonally synthesize the content from all three sources into a single, coherent summary.
-3. Finally, call the `report_writer` tool to save the complete, synthesized report into a text file. The filename should be based on the research topic (e.g., black_holes_report.txt, adhd_report.txt)
+3. Finally, call the `report_writer` agent to save the complete, synthesized report. You MUST explicitly include the filename in your message to the agent (e.g., "Save this content to black_holes_report.txt: <content>"). The filename MUST be based on the research topic and must NOT be 'report.txt'.
 """
 
 root_agent = LlmAgent(

@@ -1,6 +1,7 @@
 import wikipedia
 import arxiv
 from google.adk.agents import LlmAgent
+from google.adk.tools.agent_tool import AgentTool
 from google.adk.tools.google_search_tool import GoogleSearchTool
 
 
@@ -82,7 +83,7 @@ web_agent = LlmAgent(
     name='web_researcher',
     description='An expert at finding and summarizing information from the web.',
     instruction='You are a specialized agent and your only task is to accept a research query and use the google_search_tool to find relevant information from the web.',
-    tools=[GoogleSearchTool(bypass_multi_tool_limit=True)]
+    tools=[GoogleSearchTool(bypass_multi_tools_limit=True)]
 )
 
 #-----------------------     Report Writer Agent     -----------------------
@@ -106,7 +107,36 @@ def report_writer_tool(content: str, filename: str) -> str:
 report_writer_agent = LlmAgent(
     model='gemini-2.5-flash',
     name='report_writer',
-    description='An expert at writing and saving reports to a local file.',
-    instruction='You are a specialized agent and your only task is to accept content and use the report_writer_tool to save this content to a file named report.txt.',
+    description='An expert at writing contents to a local file.',
+    instruction='You are a specialized agent and your only task is to accept content and use the report_writer_tool to save this content to a specified file.',
     tools=[report_writer_tool]
+)
+
+#-----------------------     Controller Agent     -----------------------
+controller_instruction = """
+You are a research assistant who orchestrates a team of specializt agents to produce a high-quality research report. 
+Your primary role is to delegate tasks, synthesize the results, and ensure the final report is well-structured.
+
+Your specializt team consists of:
+- `wikipedia_researcher`: Use this agent to get general background information and a high-level overview.
+- `arxiv_researcher`: Use this agent to find relevant academic papers and their summaries.
+- `web_researcher`: Use this agent to find up-to-date information and supplementary context from the web.
+
+Your workflow MUST be as follows:
+1. First, call all three specialist research agents('wikipedia_researcher', 'arxiv_researcher', 'web_researcher') with the same research query to gather information on the topic from their respective sources.
+2. Once all information has been gatehered, you must pesonally synthesize the content from all three sources into a single, coherent summary.
+3. Finally, call the `report_writer` tool to save the complete, synthesized report into a text file. The filename should be based on the research topic (e.g., black_holes_report.txt, adhd_report.txt)
+"""
+
+root_agent = LlmAgent(
+    model='gemini-2.5-flash',
+    name='controller',
+    description='The main controller for a multi-agent research team.',
+    instruction=controller_instruction,
+    tools=[
+        AgentTool(wikipedia_agent),
+        AgentTool(arxiv_agent),
+        AgentTool(web_agent),
+        AgentTool(report_writer_agent)
+    ]
 )

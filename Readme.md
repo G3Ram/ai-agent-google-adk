@@ -213,3 +213,44 @@ This means the controller's instruction prompt is no longer a multi-step researc
 - **Easier to debug** — failures are isolated to a specific worker agent
 - **Scalable** — new capabilities can be added by introducing new worker agents without modifying existing ones
 - **Context efficiency** — each worker operates in its own context window, reducing the risk of context overload in complex workflows
+
+## Evaluating Your Agent
+
+Once your agent is built, you need a systematic way to measure how well it performs. Google ADK provides a rich suite of built-in evaluation criteria, each designed to measure a different facet of an agent's performance.
+
+![Evaluation Criteria](images/evaluation_criteria.png)
+
+Evaluation in ADK is driven by two inputs:
+
+- **EvalSet** — a collection of test cases, each containing an input query and the expected output or behavior
+- **EvalConfig** — a configuration file that specifies which evaluation criteria to apply and how to score them
+
+These are passed to `adk eval`, which runs the agent against the EvalSet and scores it according to the EvalConfig.
+
+### LLM-as-a-Judge
+
+Many of the built-in criteria use a powerful **LLM-as-a-Judge** approach, where a separate LLM is used to score the agent's responses against a set of rules. This provides a nuanced, semantic assessment that goes far beyond simple string matching — the judge can assess tone, completeness, factual accuracy, and reasoning quality.
+
+### Evaluation Criteria
+
+ADK's evaluation criteria are grouped by what they measure:
+
+**Response Quality**
+- `response_match_score` — measures how closely the agent's final response matches the expected answer, using semantic similarity rather than exact string matching
+- `response_evaluation_score` — uses LLM-as-a-Judge to rate the response quality against a custom rubric (e.g., clarity, accuracy, completeness)
+
+**Tool Use**
+- `tool_call_match` — checks whether the agent called the correct tools (exact match)
+- `tool_trajectory_avg_score` — evaluates the sequence of tool calls the agent made across the entire conversation, rewarding efficient and correct tool usage patterns
+
+**Safety & Groundedness**
+- `safety` — uses LLM-as-a-Judge to flag responses that contain harmful, offensive, or policy-violating content
+- `groundedness` — checks whether the agent's response is grounded in the retrieved context and does not hallucinate information
+
+### Running Evaluations
+
+```bash
+adk eval <agent_module> <evalset_file> --config <evalconfig_file>
+```
+
+Evaluation results are reported per-criterion, giving you a clear picture of where your agent excels and where it needs improvement — making it an essential step before deploying to production.

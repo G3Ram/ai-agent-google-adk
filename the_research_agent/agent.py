@@ -1,6 +1,7 @@
 import wikipedia
 import arxiv
 from google.adk.agents.llm_agent import Agent
+from google.adk.tools.google_search_tool import GoogleSearchTool
 
 def wikipedia_tool(query: str) -> str:
     """
@@ -55,6 +56,25 @@ def arxiv_tool(query: str) -> str:
     except Exception as e:
         return f"An error occurred while searching arXiv: {str(e)}"
 
+
+def report_writer_tool(content: str, filename: str) -> str:
+    """
+    Writes the given content to a local file. Appends if the file already exists. 
+
+    Args:
+        content (str): The text content to write to the file.
+        filename (str): The name of the file to save the content in (e.g., 'report.txt').
+    """
+    try:
+        # use 'a' for append mode. This will create the file if it does not exist,
+        # or add to the end of it if it does exist.
+        with open(filename, 'a', encoding='utf-8') as f:
+            f.write(content + "\n")
+        return f"Successfully appended content to {filename}."
+    except Exception as e:
+        return f"An error occurred while writing to the file: {str(e)}"
+
+        
 root_agent = Agent(
     model='gemini-2.5-flash',
     name='root_agent',

@@ -126,3 +126,51 @@ The Runner's primary role is to manage the event loop, which is the fundamental 
 This cooperative **yield → pause → process → resume** cycle is the heartbeat of the ADK runtime. It ensures that actions like tool calls and state updates are handled consistently and that the agent is always working with the most up-to-date information.
 
 ![ADK Runtime](images/ADK runtime.png)
+
+## Building a Research Agent
+
+We'll build a research agent step by step, exploring three architectural patterns of increasing complexity. The first pattern we'll implement is the **Monolithic Agent**.
+
+### Pattern 1: Monolithic Agent
+
+![Monolithic Agent](images/monolithic_agent.png)
+
+A **monolithic agent** is an architectural pattern where a single, central `LlmAgent` contains all the logic and is responsible for orchestrating all the necessary tools to complete a task.
+
+This is a powerful and effective starting point, as it consolidates the entire workflow's logic in one place, making it easier to reason about and implement.
+
+#### Architecture
+
+A monolithic agent's architecture consists of two primary components:
+
+- **The Brain** — the instruction prompt that defines the agent's goals, behavior, and reasoning strategy
+- **The Capabilities** — the tools the agent has at its disposal to act on the world
+
+In our research agent, the agent is given a set of tools it can call as needed to complete a research task:
+
+- `wikipedia_tool` — fetches background knowledge and summaries on topics
+- `arxiv_tool` — searches academic papers and research literature
+- `GoogleSearch_tool` — performs live web searches for up-to-date information
+- `report_writer_tool` — compiles findings into a structured, readable report
+
+The agent decides autonomously which tools to call, in what order, and how to combine the results to fulfill the user's request.
+
+#### How It Works
+
+1. The user submits a research query to the agent.
+2. The agent reasons about the query and decides which tool to call first.
+3. It calls the tool and receives a response.
+4. Based on that response, it decides whether to call another tool or synthesize the results.
+5. Once it has gathered enough information, it uses the `report_writer_tool` to produce a final report and returns it to the user.
+
+#### When to Use the Monolithic Pattern
+
+The monolithic pattern is ideal when:
+
+- The task scope is well-defined and can be managed by a single agent
+- You want simplicity — one agent, one prompt, all tools in one place
+- You are prototyping and want to validate the workflow before introducing more complex multi-agent architectures
+
+#### Limitations
+
+As tasks grow in complexity, a single agent managing everything can become harder to maintain, debug, and scale. Each tool call adds to the context window, and the agent may struggle with very long workflows. These are the motivations for the more advanced patterns we'll explore next.

@@ -82,5 +82,31 @@ web_agent = LlmAgent(
     name='web_researcher',
     description='An expert at finding and summarizing information from the web.',
     instruction='You are a specialized agent and your only task is to accept a research query and use the google_search_tool to find relevant information from the web.',
-    tools=[GoogleSearchTool()]
+    tools=[GoogleSearchTool(bypass_multi_tool_limit=True)]
+)
+
+#-----------------------     Report Writer Agent     -----------------------
+def report_writer_tool(content: str, filename: str) -> str:
+    """
+    Writes the given content to a local file. Appends if the file already exists. 
+
+    Args:
+        content (str): The text content to write to the file.
+        filename (str): The name of the file to save the content in (e.g., 'report.txt').
+    """
+    try:
+        # use 'a' for append mode. This will create the file if it does not exist,
+        # or add to the end of it if it does exist.
+        with open(filename, 'a', encoding='utf-8') as f:
+            f.write(content + "\n")
+        return f"Successfully appended content to {filename}."
+    except Exception as e:
+        return f"An error occurred while writing to the file: {str(e)}"
+
+report_writer_agent = LlmAgent(
+    model='gemini-2.5-flash',
+    name='report_writer',
+    description='An expert at writing and saving reports to a local file.',
+    instruction='You are a specialized agent and your only task is to accept content and use the report_writer_tool to save this content to a file named report.txt.',
+    tools=[report_writer_tool]
 )

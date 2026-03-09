@@ -1,4 +1,5 @@
 import wikipedia
+import arxiv
 from google.adk.agents.llm_agent import Agent
 
 def wikipedia_tool(query: str) -> str:
@@ -23,6 +24,36 @@ def wikipedia_tool(query: str) -> str:
     except Exception as e:
         return f"An unexpected error occurred while searching Wikipedia: {str(e)}"
 
+
+def arxiv_tool(query: str) -> str:
+    """
+    Search arXiv repository for academic papers matching a query.
+
+    Args:
+        query (str): The topic to search for academic papers on arXiv.
+    """
+    try:
+        # create a client to interact with the arXiv API
+        client = arxiv.Client()
+
+        # define the search parameters
+        search = arxiv.Search(
+            query=query,
+            max_results=3,
+            sort_by=arxiv.SortCriterion.Relevance
+        )
+
+        results = []
+        for result in client.results(search):
+            results.append(f"Title: {result.title}\nSummary: {result.summary}\nURL: {result.entry_id}")
+        
+        if not results:
+            return f"No papers found on arXiv for the query '{query}'."
+        
+        return "\n-------\n".join(results)
+    
+    except Exception as e:
+        return f"An error occurred while searching arXiv: {str(e)}"
 
 root_agent = Agent(
     model='gemini-2.5-flash',
